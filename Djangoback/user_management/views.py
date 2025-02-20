@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-
+from rest_framework_simplejwt.tokens import RefreshToken
 @csrf_exempt
 def user_register(request):
     if request.method == 'POST':
@@ -23,11 +23,18 @@ def user_login(request):
         username = data.get('username')
         password = data.get('password')
         user = authenticate(username=username, password=password)
+        
         if user is not None:
             login(request, user)
-            return JsonResponse({'status': 'success', 'message': 'User logged in successfully'})
-        else:
-            return JsonResponse({'status': 'error', 'message': 'Invalid credentials'})
+            # JWT生成
+            refresh = RefreshToken.for_user(user)
+            return JsonResponse({
+                'status': 'success',
+                'message': '登录成功',
+                'token': str(refresh.access_token),
+                'refresh': str(refresh)
+            })
+        return JsonResponse({'status': 'error', 'message': '账号或密码错误'})
 
 @csrf_exempt
 def user_logout(request):
@@ -58,3 +65,18 @@ def reset_password(request):
             return JsonResponse({'status': 'success', 'message': 'Password reset successfully'})
         else:
             return JsonResponse({'status': 'error', 'message': 'Old password is incorrect'})
+
+# 登录检查接口
+def check_user_login(request):
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            return JsonResponse({
+                'status': 'success',
+                'isLoggedIn': True,
+                'username': request.user.username
+            })
+        else:
+            return JsonResponse({
+                'status': 'success',
+                'isLoggedIn': False
+            })

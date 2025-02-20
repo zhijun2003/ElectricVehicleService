@@ -1,120 +1,91 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// pages/user/user.js
+Page({
+  data: {
+    username: '',
+    password: '',
+    email: '',
+    message: '',
+    isLoggedIn: false
+  },
 
-const UserPage = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [message, setMessage] = useState('');
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+  onLoad() {
+    this.checkLoginStatus();
+  },
 
-    useEffect(() => {
-        // 检查用户是否已经登录
-        axios.get('/api/user/check_login')
-            .then(response => {
-                setIsLoggedIn(response.data.isLoggedIn);
-            })
-            .catch(error => {
-                setIsLoggedIn(false);
-            });
-    }, []);
-
-    const handleRegister = async () => {
-        try {
-            const response = await axios.post('/api/user/register', {
-                username,
-                password,
-                email
-            });
-            setMessage(response.data.message);
-            setUsername('');
-            setPassword('');
-            setEmail('');
-        } catch (error) {
-            setMessage(error.response.data.message);
+  checkLoginStatus() {
+    const app = getApp();
+    wx.request({
+      url: app.globalData.apiBase + 'user/check_login',
+      method: 'GET',
+      header: {
+        'Authorization': 'Bearer ' + wx.getStorageSync('token')
+      },
+      success: (res) => {
+        if (res.data.status === 'success') {
+          this.setData({
+            isLoggedIn: true,
+            username: res.data.username
+          });
         }
-    };
+      }
+    });
+  },
 
-    const handleLogin = async () => {
-        try {
-            const response = await axios.post('/api/user/login', {
-                username,
-                password
-            });
-            setMessage(response.data.message);
-            setIsLoggedIn(true);
-            setUsername('');
-            setPassword('');
-        } catch (error) {
-            setMessage(error.response.data.message);
+  handleRegister() {
+    const { username, password, email } = this.data;
+    const app = getApp();
+    wx.request({
+      url: app.globalData.apiBase + 'user/register',
+      method: 'POST',
+      data: { username, password, email },
+      success: (res) => {
+        this.setData({ message: res.data.message });
+        if (res.data.status === 'success') {
+          this.setData({ username: '', password: '', email: '' });
         }
-    };
+      }
+    });
+  },
 
-    const handleLogout = async () => {
-        try {
-            const response = await axios.post('/api/user/logout');
-            setMessage(response.data.message);
-            setIsLoggedIn(false);
-        } catch (error) {
-            setMessage(error.response.data.message);
+  handleLogin() {
+    const { username, password } = this.data;
+    const app = getApp();
+    wx.request({
+      url: app.globalData.apiBase + 'user/login',
+      method: 'POST',
+      data: { username, password },
+      success: (res) => {
+        if (res.data.status === 'success') {
+          wx.setStorageSync('token', res.data.token);
+          this.setData({ 
+            isLoggedIn: true,
+            username: username,
+            password: '',
+            message: '登录成功'
+          });
+        } else {
+          this.setData({ message: res.data.message });
         }
-    };
+      }
+    });
+  },
 
-    return (
-        <div>
-            <h1>User Management</h1>
-            {isLoggedIn ? (
-                <div>
-                    <h2>Welcome, {username}!</h2>
-                    <button onClick={handleLogout}>Logout</button>
-                </div>
-            ) : (
-                <div>
-                    <div>
-                        <h2>Register</h2>
-                        <input
-                            type="text"
-                            placeholder="Username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                        <button onClick={handleRegister}>Register</button>
-                    </div>
-                    <div>
-                        <h2>Login</h2>
-                        <input
-                            type="text"
-                            placeholder="Username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <button onClick={handleLogin}>Login</button>
-                    </div>
-                </div>
-            )}
-            <div>
-                <p>{message}</p>
-            </div>
-        </div>
-    );
-};
-
-export default UserPage;
+  handleLogout() {
+    const app = getApp();
+    wx.request({
+      url: app.globalData.apiBase + 'user/logout',
+      method: 'POST',
+      header: {
+        'Authorization': 'Bearer ' + wx.getStorageSync('token')
+      },
+      success: () => {
+        wx.removeStorageSync('token');
+        this.setData({ 
+          isLoggedIn: false,
+          username: '',
+          message: '已退出登录'
+        });
+      }
+    });
+  }
+});

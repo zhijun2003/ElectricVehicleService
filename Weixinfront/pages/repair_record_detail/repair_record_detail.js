@@ -1,3 +1,4 @@
+// pages/repair_record_detail/repair_record_detail.js
 Page({
   data: {
     record: {}

@@ -1,9 +1,12 @@
+// pages/charging_records.js
 Page({
   data: {
     records: []
   },
-  onLoad() {
-    this.loadChargingRecords();
+  onLoad(options) {
+    if (options.id) {
+      this.loadRepairRecord(options.id)
+    }
   },
   loadChargingRecords() {
     wx.request({
@@ -13,5 +16,11 @@ Page({
         this.setData({ records: res.data.data });
       }
     });
+  },
+  onShowRecordDetail(e) {
+    const recordId = e.currentTarget.dataset.id
+    wx.navigateTo({
+      url: `/pages/repair_record_detail/repair_record_detail?id=${recordId}`
+    })
   }
 });

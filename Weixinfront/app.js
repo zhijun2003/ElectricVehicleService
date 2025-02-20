@@ -1,5 +1,10 @@
 // app.js
 App({
+  globalData: {
+    userInfo: null,
+    apiBase: 'https:// url /api/',//后端接口地址
+    location: null
+  },
   onLaunch() {
     // 展示本地存储能力
     const logs = wx.getStorageSync('logs') || []
@@ -13,7 +18,18 @@ App({
       }
     })
   },
-  globalData: {
-    userInfo: null
+  
+  
+  // 获取全局位置信息
+  updateLocation() {
+    wx.getLocation({
+      type: 'wgs84',
+      success: res => {
+        this.globalData.location = {
+          latitude: res.latitude,
+          longitude: res.longitude
+        }
+      }
+    })
   }
 })

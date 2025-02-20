@@ -17,3 +17,24 @@ const formatNumber = n => {
 module.exports = {
   formatTime
 }
+
+const request = (url, method, data) => {
+  const app = getApp()
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url: app.globalData.apiBase + url,
+      method,
+      data,
+      header: {
+        'Authorization': `Bearer ${wx.getStorageSync('token')}`
+      },
+      success: res => res.statusCode === 200 ? resolve(res.data) : reject(res),
+      fail: reject
+    })
+  })
+}
+
+module.exports = {
+  formatTime,
+  request // 暴露请求方法
+}

@@ -1,27 +1,22 @@
-<!--index.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
-        </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
+<!-- Weixinfront/pages/index/index.wxml -->
+<view class="container">
+  <view class="user-info" bindtap="navigateToUser">
+    <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
+    <text class="nickname">{{userInfo.nickName || '点击登录'}}</text>
+  </view>
+
+  <view class="menu-grid">
+    <view class="menu-item" bindtap="navigateToMap">
+      <image src="/images/map-icon.png"></image>
+      <text>充电地图</text>
     </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
+    <view class="menu-item" bindtap="navigateToRecords">
+      <image src="/images/records-icon.png"></image>
+      <text>充电记录</text>
+    </view>
+    <view class="menu-item" bindtap="navigateToRepair">
+      <image src="/images/repair-icon.png"></image>
+      <text>保修服务</text>
     </view>
   </view>
-</scroll-view>
+</view>

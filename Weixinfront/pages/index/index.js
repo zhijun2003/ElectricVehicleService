@@ -46,4 +46,20 @@ Page({
       }
     })
   },
+  // 导航方法
+  navigateToMap() {
+    wx.navigateTo({ url: '/pages/map/map' })
+  },
+
+  navigateToRecords() {
+    wx.navigateTo({ url: '/pages/charging_records/charging_records' })
+  },
+
+  navigateToRepair() {
+    wx.navigateTo({ url: '/pages/repair_record_detail/repair_record_detail' })
+  },
+
+  navigateToUser() {
+    wx.navigateTo({ url: '/pages/user/user' })
+  }
 })
