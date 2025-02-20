@@ -1,4 +1,6 @@
 // pages/charging_records.js
+import { get } from '../../utils/api'
+
 Page({
   data: {
     records: []
@@ -9,13 +11,9 @@ Page({
     }
   },
   loadChargingRecords() {
-    wx.request({
-      url: 'https://your-backend-url/api/charging_records/',
-      method: 'GET',
-      success: (res) => {
-        this.setData({ records: res.data.data });
-      }
-    });
+    get('RECORDS').then(res => {
+      this.setData({ records: res.data })
+    }).catch(console.error)
   },
   onShowRecordDetail(e) {
     const recordId = e.currentTarget.dataset.id

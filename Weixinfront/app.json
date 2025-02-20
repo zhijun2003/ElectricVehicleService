@@ -7,9 +7,10 @@
     "pages/repair_record_detail/repair_record_detail",
     "pages/user/user"
   ],
+  "usingComponents": {},
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "Weixin",
+    "navigationBarTitleText": "电动车服务系统",
     "navigationBarBackgroundColor": "#ffffff"
   },
   "style": "v2",
@@ -17,8 +18,8 @@
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents",
   "permission": {
-  "scope.userLocation": {
-    "desc": "需要获取您的位置信息以展示周边充电桩"
+    "scope.userLocation": {
+      "desc": "需要获取您的位置信息以展示周边充电桩"
+    }
   }
-}
 }

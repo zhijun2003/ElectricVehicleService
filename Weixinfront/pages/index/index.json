@@ -1,3 +1,8 @@
 {
-  "usingComponents": {}
+  "usingComponents": {},
+  "navigationBarTitleText": "电动车服务系统",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "enablePullDownRefresh": false,
+  "backgroundColor": "#f5f6fa"
 }

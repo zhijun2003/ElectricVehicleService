@@ -16,7 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+# Import views from other apps
+from charging import views as charging_views
+from repair import views as repair_views
+from user import views as user_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/charging/records/', charging_views.get_charging_records),
+    path('api/repair/', repair_views.submit_repair),
+    path('api/user/', user_views.profile)
 ]

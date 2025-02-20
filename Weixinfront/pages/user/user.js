@@ -51,13 +51,16 @@ Page({
     const { username, password } = this.data;
     const app = getApp();
     wx.request({
-      url: app.globalData.apiBase + 'user/login',
+      url: `${getApp().globalData.baseUrl}/api/login`,
       method: 'POST',
-      data: { username, password },
+      data: {
+        username: this.data.username,
+        password: this.data.password
+      },
       success: (res) => {
         if (res.data.status === 'success') {
           wx.setStorageSync('token', res.data.token);
-          this.setData({ 
+          this.setData({
             isLoggedIn: true,
             username: username,
             password: '',
@@ -80,7 +83,7 @@ Page({
       },
       success: () => {
         wx.removeStorageSync('token');
-        this.setData({ 
+        this.setData({
           isLoggedIn: false,
           username: '',
           message: '已退出登录'

@@ -1,3 +1,5 @@
+import { get } from '../../utils/api'
+
 Page({
   data: {
     markers: [],
@@ -17,20 +19,10 @@ Page({
     });
   },
   loadChargingStations() {
-    wx.request({
-      url: 'https://your-backend-url/api/charging_stations/',
-      method: 'GET',
-      success: (res) => {
-        const markers = res.data.data.map(station => ({
-          id: station.id,
-          latitude: station.location.latitude,
-          longitude: station.location.longitude,
-          name: station.name,
-          status: station.status
-        }));
-        this.setData({ markers });
-      }
-    });
+    get('STATIONS').then(res => {
+      const markers = res.data.map(/* 转换逻辑 */)
+      this.setData({ markers })
+    }).catch(console.error)
   },
   navigateToStation(e) {
     const station = e.currentTarget.dataset.station;

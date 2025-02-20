@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'djangoadmin.urls'
@@ -68,17 +71,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'djangoadmin.wsgi.application'
 
+CORS_ORIGIN_ALLOW_ALL = True  # 开发环境临时配置允许所有的请求源
+CORS_ALLOW_CREDENTIALS = True  # 开发环境允许携带cookie
 
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ev_charging',
+        'USER': 'ev_user',
+        'PASSWORD': 'ev_password',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators

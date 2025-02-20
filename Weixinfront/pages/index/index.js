@@ -1,65 +1,66 @@
-// index.js
-const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+// pages/index/index.js
+const app = getApp()
 
 Page({
   data: {
-    motto: 'Hello World',
-    userInfo: {
-      avatarUrl: defaultAvatarUrl,
-      nickName: '',
+    menuItems: [
+      {icon: 'map', title: '充电地图', color: 'linear-gradient(135deg, #6B8DD6, #8E37D7)', url: '/pages/map/map'},
+      {icon: 'clock', title: '充电记录', color: 'linear-gradient(135deg, #00C6FB, #005BEA)', url: '/pages/charging_records/charging_records'},
+      {icon: 'repair', title: '维修申报', color: 'linear-gradient(135deg, #FF8008, #FFC837)', url: '/pages/repair_record_detail/repair_record_detail'},
+      {icon: 'user', title: '个人中心', color: 'linear-gradient(135deg, #38EF7D, #11998E)', url: '/pages/user/user'}
+    ],
+    stats: {
+      availableStations: 0,
+      avgWaitTime: 0
     },
-    hasUserInfo: false,
-    canIUseGetUserProfile: wx.canIUse('getUserProfile'),
-    canIUseNicknameComp: wx.canIUse('input.type.nickname'),
+    userStatus: {
+      charging: false,
+      reservation: null
+    },
+    recordsCount: 0
   },
-  bindViewTap() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
+
+  onShow() {
+    this.getRealTimeStats()
+    this.checkChargingStatus()
+    this.getRecordsCount()
   },
-  onChooseAvatar(e) {
-    const { avatarUrl } = e.detail
-    const { nickName } = this.data.userInfo
-    this.setData({
-      "userInfo.avatarUrl": avatarUrl,
-      hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-    })
-  },
-  onInputChange(e) {
-    const nickName = e.detail.value
-    const { avatarUrl } = this.data.userInfo
-    this.setData({
-      "userInfo.nickName": nickName,
-      hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-    })
-  },
-  getUserProfile(e) {
-    // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-    wx.getUserProfile({
-      desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-      success: (res) => {
-        console.log(res)
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
+
+  // 获取实时数据
+  getRealTimeStats() {
+    wx.request({
+      url: app.globalData.apiBase + 'statistics/',
+      success: res => {
+        this.setData({ stats: res.data })
       }
     })
   },
-  // 导航方法
-  navigateToMap() {
-    wx.navigateTo({ url: '/pages/map/map' })
+
+  // 检查充电状态
+  checkChargingStatus() {
+    wx.request({
+      url: app.globalData.apiBase + 'charging/status/',
+      header: { 'Authorization': 'Bearer ' + app.globalData.token },
+      success: res => {
+        this.setData({ userStatus: res.data })
+      }
+    })
   },
 
-  navigateToRecords() {
-    wx.navigateTo({ url: '/pages/charging_records/charging_records' })
+  // 获取未读记录数
+  getRecordsCount() {
+    wx.request({
+      url: app.globalData.apiBase + 'charging_records/unread/',
+      header: { 'Authorization': 'Bearer ' + app.globalData.token },
+      success: res => {
+        this.setData({ recordsCount: res.data.count })
+      }
+    })
   },
 
-  navigateToRepair() {
-    wx.navigateTo({ url: '/pages/repair_record_detail/repair_record_detail' })
-  },
-
-  navigateToUser() {
-    wx.navigateTo({ url: '/pages/user/user' })
+  // 统一导航方法
+  navigateTo(e) {
+    const url = e.currentTarget.dataset.url
+    wx.navigateTo({ url })
   }
 })

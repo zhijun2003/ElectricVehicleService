@@ -1,22 +1,44 @@
-<!-- Weixinfront/pages/index/index.wxml -->
+<!-- pages/index/index.wxml -->
 <view class="container">
-  <view class="user-info" bindtap="navigateToUser">
-    <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-    <text class="nickname">{{userInfo.nickName || '点击登录'}}</text>
+  <!-- 充电状态提示 -->
+  <view class="status-card" wx:if="{{userStatus.charging}}">
+    <image class="status-icon" src="/images/charging.png"/>
+    <text class="status-text">
+      正在充电：{{userStatus.charging.station}} 
+      剩余{{userStatus.charging.remain}}%
+    </text>
   </view>
 
-  <view class="menu-grid">
-    <view class="menu-item" bindtap="navigateToMap">
-      <image src="/images/map-icon.png"></image>
-      <text>充电地图</text>
+  <!-- 功能导航网格 -->
+  <view class="grid-container">
+    <block wx:for="{{menuItems}}" wx:key="index">
+      <view 
+        class="menu-item" 
+        style="background: {{item.color}}"
+        bindtap="navigateTo" 
+        data-url="{{item.url}}"
+        hover-class="menu-item-hover"
+      >
+        <image class="menu-icon" src="/images/{{item.icon}}.png"/>
+        <text class="menu-title">{{item.title}}</text>
+        <view class="menu-badge" wx:if="{{item.icon === 'clock' && recordsCount > 0}}">
+          {{recordsCount}}
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 实时数据看板 -->
+  <view class="stats-panel">
+    <view class="stats-item">
+      <image class="stats-icon" src="/images/station.png"/>
+      <text class="stats-value">{{stats.availableStations}}</text>
+      <text class="stats-label">可用桩位</text>
     </view>
-    <view class="menu-item" bindtap="navigateToRecords">
-      <image src="/images/records-icon.png"></image>
-      <text>充电记录</text>
-    </view>
-    <view class="menu-item" bindtap="navigateToRepair">
-      <image src="/images/repair-icon.png"></image>
-      <text>保修服务</text>
+    <view class="stats-item">
+      <image class="stats-icon" src="/images/time.png"/>
+      <text class="stats-value">{{stats.avgWaitTime}}min</text>
+      <text class="stats-label">平均等待</text>
     </view>
   </view>
 </view>
