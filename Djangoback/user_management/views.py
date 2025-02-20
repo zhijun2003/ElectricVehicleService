@@ -33,3 +33,28 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return JsonResponse({'status': 'success', 'message': 'User logged out successfully'})
+
+@csrf_exempt
+def update_user_info(request):
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        user = request.user
+        user.email = data.get('email', user.email)
+        user.first_name = data.get('first_name', user.first_name)
+        user.last_name = data.get('last_name', user.last_name)
+        user.save()
+        return JsonResponse({'status': 'success', 'message': 'User info updated successfully'})
+
+@csrf_exempt
+def reset_password(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user = request.user
+        old_password = data.get('old_password')
+        new_password = data.get('new_password')
+        if user.check_password(old_password):
+            user.set_password(new_password)
+            user.save()
+            return JsonResponse({'status': 'success', 'message': 'Password reset successfully'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Old password is incorrect'})
