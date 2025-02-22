@@ -1,3 +1,0 @@
-# Djangoback/requirements.txt
-Django>=5.0.6
-mysqlclient>=2.2.0

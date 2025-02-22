@@ -1,3 +1,4 @@
+# repair/models.py
 from django.db import models
 from django.conf import settings
 
@@ -13,7 +14,7 @@ class RepairOrder(models.Model):
 
     # 核心字段
     user = models.ForeignKey(
-        CustomUser,
+        settings.AUTH_USER_MODEL,  # 使用标准引用方式
         on_delete=models.CASCADE,
         verbose_name='关联用户'
     )
@@ -45,7 +46,7 @@ class RepairOrder(models.Model):
         verbose_name='最后更新时间'
     )
 
-    # 关联维修人员（假设存在员工模型）
+    # 关联维修人员
     assigned_staff = models.ForeignKey(
         'Staff',
         on_delete=models.SET_NULL,
@@ -66,7 +67,7 @@ class RepairOrder(models.Model):
 class Staff(models.Model):
     """维修人员模型"""
     user = models.OneToOneField(
-        CustomUser,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         primary_key=True
     )
