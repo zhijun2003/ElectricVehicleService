@@ -1,7 +1,10 @@
+import json
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import json
+
 from .models import RepairRecord
+
 
 @csrf_exempt
 def submit_repair_record(request):
@@ -13,13 +16,16 @@ def submit_repair_record(request):
         record = RepairRecord.objects.create(user=user, description=description, image_url=image_url)
         return JsonResponse({'status': 'success', 'message': 'Repair record submitted successfully'})
 
+
 @csrf_exempt
 def get_repair_records(request):
     if request.method == 'GET':
         user = request.user
         records = RepairRecord.objects.filter(user=user)
-        records_data = [{'id': record.id, 'description': record.description, 'status': record.status} for record in records]
+        records_data = [{'id': record.id, 'description': record.description, 'status': record.status} for record in
+                        records]
         return JsonResponse({'status': 'success', 'data': records_data})
+
 
 @csrf_exempt
 def update_repair_record(request, record_id):

@@ -1,9 +1,12 @@
-from django.contrib.auth.models import User
+import json
+
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import json
 from rest_framework_simplejwt.tokens import RefreshToken
+
+
 @csrf_exempt
 def user_register(request):
     if request.method == 'POST':
@@ -16,6 +19,7 @@ def user_register(request):
         user = User.objects.create_user(username=username, password=password, email=email)
         return JsonResponse({'status': 'success', 'message': 'User registered successfully'})
 
+
 @csrf_exempt
 def user_login(request):
     if request.method == 'POST':
@@ -23,7 +27,7 @@ def user_login(request):
         username = data.get('username')
         password = data.get('password')
         user = authenticate(username=username, password=password)
-        
+
         if user is not None:
             login(request, user)
             # JWT生成
@@ -36,10 +40,12 @@ def user_login(request):
             })
         return JsonResponse({'status': 'error', 'message': '账号或密码错误'})
 
+
 @csrf_exempt
 def user_logout(request):
     logout(request)
     return JsonResponse({'status': 'success', 'message': 'User logged out successfully'})
+
 
 @csrf_exempt
 def update_user_info(request):
@@ -51,6 +57,7 @@ def update_user_info(request):
         user.last_name = data.get('last_name', user.last_name)
         user.save()
         return JsonResponse({'status': 'success', 'message': 'User info updated successfully'})
+
 
 @csrf_exempt
 def reset_password(request):
@@ -65,6 +72,7 @@ def reset_password(request):
             return JsonResponse({'status': 'success', 'message': 'Password reset successfully'})
         else:
             return JsonResponse({'status': 'error', 'message': 'Old password is incorrect'})
+
 
 # 登录检查接口
 def check_user_login(request):

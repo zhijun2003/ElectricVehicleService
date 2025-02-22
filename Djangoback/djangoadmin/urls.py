@@ -1,29 +1,24 @@
-"""
-URL configuration for djangoadmin project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/dev/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+from apps.charging.views import ChargingStationViewSet
+# 导入视图
+from apps.charging.views import get_charging_records
+from apps.repair.views import submit_repair
+from apps.user.views import profile
 from django.contrib import admin
-from django.urls import path
-# Import views from other apps
-from charging import views as charging_views
-from repair import views as repair_views
-from user import views as user_views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
+# 初始化路由
+router = DefaultRouter()
+router.register(r'api/stations', ChargingStationViewSet, basename='station')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/charging/records/', charging_views.get_charging_records),
-    path('api/repair/', repair_views.submit_repair),
-    path('api/user/', user_views.profile)
+
+    # 基础API端点
+    path('api/charging/records/', get_charging_records),
+    path('api/repair/', submit_repair),
+    path('api/user/', profile),
+
+    # 包含视图集路由
+    path('', include(router.urls)),
 ]
