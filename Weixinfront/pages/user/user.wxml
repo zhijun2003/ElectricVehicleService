@@ -1,2 +1,24 @@
 <!--pages/user/user.wxml-->
-<text>pages/user/user.wxml</text>
+<view class="container">
+  <!-- 用户信息卡片 -->
+  <van-cell-group wx:if="{{isLogin}}">
+    <van-cell title="头像" value="{{userInfo.avatarUrl}}" border="{{false}}">
+      <image slot="icon" src="{{userInfo.avatarUrl}}" class="avatar" />
+    </van-cell>
+    <van-cell title="用户名" value="{{userInfo.nickName}}" />
+    <van-cell title="手机号" value="{{userInfo.phone}}" link-type="navigateTo" url="/pages/update-phone/update-phone" />
+  </van-cell-group>
+
+  <!-- 操作按钮组 -->
+  <view class="btn-group">
+    <van-button wx:if="{{!isLogin}}" type="primary" block bindtap="handleWechatLogin">
+      微信一键登录
+    </van-button>
+    <van-button wx:else type="info" block bindtap="handleLogout">
+      退出登录
+    </van-button>
+    <van-button plain hairline block url="/pages/reset-password/reset-password">
+      修改密码
+    </van-button>
+  </view>
+</view>

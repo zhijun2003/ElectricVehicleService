@@ -21,9 +21,9 @@ INSTALLED_APPS = [
     # Third-party apps
     'rest_framework',
     'corsheaders',
-    'drf_yasg',
 
     # Local apps
+    'apps.admin',
     'apps.user',
     'apps.charging',
     'apps.repair',
@@ -61,17 +61,11 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ev_charging',
-        'USER': 'ev_user',
-        'PASSWORD': 'ev_password',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {'charset': 'utf8mb4'},
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # 数据库文件存储路径
     }
 }
-
-AUTH_USER_MODEL = 'user.User'
+AUTH_USER_MODEL = 'user.CustomUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

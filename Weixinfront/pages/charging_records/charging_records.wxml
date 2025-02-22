@@ -1,2 +1,32 @@
-<!--pages/charging_records.wxml-->
-<text>pages/charging_records.wxml</text>
+<!-- charging-records.wxml -->
+<view class="record-container">
+  <van-search
+    placeholder="搜索充电桩名称"
+    value="{{searchKey}}"
+    bind:change="onSearch"
+  />
+
+  <scroll-view
+    scroll-y
+    class="scroll-view"
+    bindscrolltolower="loadMore"
+  >
+    <van-empty wx:if="{{list.length === 0}}" description="暂无记录" />
+
+    <van-cell-group wx:else>
+      <van-cell
+        wx:for="{{list}}"
+        wx:key="id"
+        title="{{item.pileName}}"
+        value="{{item.duration}}分钟"
+        label="{{item.startTime}}"
+      >
+        <view slot="right-icon" class="status-badge status-{{item.status}}">
+          {{item.status | statusText}}
+        </view>
+      </van-cell>
+    </van-cell-group>
+
+    <van-loading wx:if="{{loading}}" custom-class="loading" />
+  </scroll-view>
+</view>

@@ -1,94 +1,43 @@
 // pages/user/user.js
+// user-center.js
 Page({
   data: {
-    username: '',
-    password: '',
-    email: '',
-    message: '',
-    isLoggedIn: false
+    isLogin: false,
+    userInfo: {}
   },
 
-  onLoad() {
+  onShow() {
     this.checkLoginStatus();
   },
 
-  checkLoginStatus() {
-    const app = getApp();
-    wx.request({
-      url: app.globalData.apiBase + 'user/check_login',
-      method: 'GET',
-      header: {
-        'Authorization': 'Bearer ' + wx.getStorageSync('token')
-      },
-      success: (res) => {
-        if (res.data.status === 'success') {
-          this.setData({
-            isLoggedIn: true,
-            username: res.data.username
-          });
-        }
-      }
-    });
-  },
-
-  handleRegister() {
-    const { username, password, email } = this.data;
-    const app = getApp();
-    wx.request({
-      url: app.globalData.apiBase + 'user/register',
-      method: 'POST',
-      data: { username, password, email },
-      success: (res) => {
-        this.setData({ message: res.data.message });
-        if (res.data.status === 'success') {
-          this.setData({ username: '', password: '', email: '' });
-        }
-      }
-    });
-  },
-
-  handleLogin() {
-    const { username, password } = this.data;
-    const app = getApp();
-    wx.request({
-      url: `${getApp().globalData.baseUrl}/api/login`,
-      method: 'POST',
-      data: {
-        username: this.data.username,
-        password: this.data.password
-      },
-      success: (res) => {
-        if (res.data.status === 'success') {
-          wx.setStorageSync('token', res.data.token);
-          this.setData({
-            isLoggedIn: true,
-            username: username,
-            password: '',
-            message: '登录成功'
-          });
-        } else {
-          this.setData({ message: res.data.message });
-        }
-      }
-    });
-  },
-
-  handleLogout() {
-    const app = getApp();
-    wx.request({
-      url: app.globalData.apiBase + 'user/logout',
-      method: 'POST',
-      header: {
-        'Authorization': 'Bearer ' + wx.getStorageSync('token')
-      },
-      success: () => {
-        wx.removeStorageSync('token');
+  // 检查登录状态
+  async checkLoginStatus() {
+    const token = wx.getStorageSync('token');
+    if (token) {
+      try {
+        const res = await wx.$http.get('/user/info');
         this.setData({
-          isLoggedIn: false,
-          username: '',
-          message: '已退出登录'
+          isLogin: true,
+          userInfo: res.data
         });
+      } catch (err) {
+        wx.removeStorageSync('token');
       }
-    });
+    }
+  },
+
+  // 微信登录
+  async handleWechatLogin() {
+    const { code } = await wx.login();
+    const res = await wx.$http.post('/auth/wechat-login', { code });
+
+    wx.setStorageSync('token', res.data.token);
+    this.checkLoginStatus();
+  },
+
+  // 退出登录
+  handleLogout() {
+    wx.removeStorageSync('token');
+    this.setData({ isLogin: false });
   }
 });
