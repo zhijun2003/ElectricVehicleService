@@ -74,7 +74,6 @@ DATABASES = {
         'PORT': '3306',
         'OPTIONS': {
             'charset': 'utf8mb4',
-            'ssl': {'ca': '/path/to/server-ca.pem'}  # 如果使用云数据库
         }
     }
 }
