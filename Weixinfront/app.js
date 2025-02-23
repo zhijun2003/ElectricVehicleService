@@ -4,7 +4,7 @@ App({
     appid: 'wx650d15724076f822',
     baseUrl: 'http://localhost:8000',  // 开发时使用本地后端
     userInfo: null,
-    apiBase: 'https:// url /api/',//后端接口地址
+    apiBase: 'https://localhost:8000/api/',//后端接口地址
     location: null
   },
   onLaunch() {

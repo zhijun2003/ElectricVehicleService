@@ -1,0 +1,90 @@
+<!--pages/repair_record/repair_record.wxml-->
+<view class="container">
+  <!-- 新建申报按钮 -->
+  <view class="fab" bindtap="navigateToCreate">
+    <van-icon name="plus" size="48rpx" color="#fff" />
+  </view>
+
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <van-search
+      placeholder="搜索申报记录"
+      value="{{searchKey}}"
+      bind:search="onSearch"
+      bind:clear="onClear"
+    />
+    <van-dropdown-menu active-color="#6B8DD6">
+      <van-dropdown-item
+        title="状态筛选"
+        options="{{ statusOptions }}"
+        value="{{filterStatus}}"
+        bind:change="onStatusChange"
+      />
+    </van-dropdown-menu>
+  </view>
+
+  <!-- 申报记录列表 -->
+  <scroll-view
+    scroll-y
+    class="list-container"
+    bindscrolltolower="loadMore"
+    refresher-enabled
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onRefresh"
+  >
+    <block wx:for="{{list}}" wx:key="id">
+      <view class="record-card">
+        <view class="card-header">
+          <text class="record-id">#{{item.id}}</text>
+          <van-tag
+            type="{{getStatusColor(item.status)}}"
+            custom-class="status-tag"
+          >
+            {{item.status}}
+          </van-tag>
+        </view>
+
+        <view class="content">
+          <text class="description">{{item.description}}</text>
+          <image
+            wx:if="{{item.image_url}}"
+            src="{{item.image_url}}"
+            class="preview-image"
+            mode="aspectFill"
+            bindtap="previewImage"
+            data-src="{{item.image_url}}"
+          />
+        </view>
+
+        <view class="meta-info">
+          <text class="time">{{formatTime(item.created_at)}}</text>
+          <view class="actions">
+            <van-button
+              wx:if="{{item.status === 'pending'}}"
+              size="mini"
+              type="danger"
+              bindtap="cancelRecord"
+              data-id="{{item.id}}"
+            >
+              取消申报
+            </van-button>
+            <van-button
+              size="mini"
+              plain
+              bindtap="viewDetail"
+              data-id="{{item.id}}"
+            >
+              详情
+            </van-button>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 加载状态 -->
+    <view class="loading-wrapper">
+      <van-loading wx:if="{{loading}}" size="24px" />
+      <text wx:if="{{!hasMore}}">没有更多记录了</text>
+    </view>
+  </scroll-view>
+</view>

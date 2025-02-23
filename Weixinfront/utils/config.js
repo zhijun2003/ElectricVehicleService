@@ -1,11 +1,6 @@
 // Weixinfront/utils/config.js
-const ENV = 'dev' // 可切换为 prod
-
 export const API_CONFIG = {
-  baseURL: {
-    dev: 'https://dev.your-api.com',
-    prod: 'https://api.your-service.com'
-  },
+  baseURL: 'http://localhost:8000',
   endpoints: {
     STATIONS: '/api/charging/stations',
     RECORDS: '/api/charging/records',

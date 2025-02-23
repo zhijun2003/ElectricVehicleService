@@ -1,37 +1,71 @@
+# --------------- views.py ---------------
 import json
 
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.pagination import PageNumberPagination
 
-from .models import RepairRecord
+from .models import RepairOrder
 
 
-@csrf_exempt
+class RepairPagination(PageNumberPagination):
+    page_size = 15
+    page_size_query_param = 'page_size'
+
 def submit_repair_record(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        user = request.user
-        description = data.get('description')
-        image_url = data.get('image_url')
-        record = RepairRecord.objects.create(user=user, description=description, image_url=image_url)
-        return JsonResponse({'status': 'success', 'message': 'Repair record submitted successfully'})
+        try:
+            data = json.loads(request.body)
+            required_fields = ['vehicle_model', 'license_plate', 'issue_description']
+            if not all(field in data for field in required_fields):
+                return JsonResponse({'status': 'error', 'message': '缺少必填字段'}, status=400)
+
+            record = RepairOrder.objects.create(
+                user=request.user,
+                vehicle_model=data['vehicle_model'],
+                license_plate=data['license_plate'],
+                issue_description=data['issue_description'],
+                image_url=data.get('image_url')
+            )
+            return JsonResponse({
+                'status': 'success',
+                'data': {
+                    'id': record.id,
+                    'license_plate': record.license_plate,
+                    'status': record.status
+                }
+            })
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 
-@csrf_exempt
 def get_repair_records(request):
     if request.method == 'GET':
-        user = request.user
-        records = RepairRecord.objects.filter(user=user)
-        records_data = [{'id': record.id, 'description': record.description, 'status': record.status} for record in
-                        records]
-        return JsonResponse({'status': 'success', 'data': records_data})
+        try:
+            records = RepairOrder.objects.filter(user=request.user).order_by('-created_at')
+            records_data = [{
+                'id': record.id,
+                'vehicle_model': record.vehicle_model,
+                'license_plate': record.license_plate,
+                'issue_description': record.issue_description,
+                'status': record.status,
+                'created_at': record.created_at.strftime('%Y-%m-%d %H:%M'),
+                'image_url': record.image_url
+            } for record in records]
+            return JsonResponse({'status': 'success', 'data': records_data})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 
-@csrf_exempt
 def update_repair_record(request, record_id):
     if request.method == 'PUT':
-        data = json.loads(request.body)
-        record = RepairRecord.objects.get(id=record_id)
-        record.status = data.get('status', record.status)
-        record.save()
-        return JsonResponse({'status': 'success', 'message': 'Repair record updated successfully'})
+        try:
+            data = json.loads(request.body)
+            record = RepairOrder.objects.get(id=record_id, user=request.user)
+            if 'status' in data:
+                record.status = data['status']
+                record.save()
+            return JsonResponse({'status': 'success', 'data': {'new_status': record.status}})
+        except RepairOrder.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': '工单不存在'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)

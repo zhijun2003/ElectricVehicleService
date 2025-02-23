@@ -1,24 +1,35 @@
 <!--pages/user/user.wxml-->
-<view class="container">
-  <!-- 用户信息卡片 -->
-  <van-cell-group wx:if="{{isLogin}}">
-    <van-cell title="头像" value="{{userInfo.avatarUrl}}" border="{{false}}">
-      <image slot="icon" src="{{userInfo.avatarUrl}}" class="avatar" />
-    </van-cell>
-    <van-cell title="用户名" value="{{userInfo.nickName}}" />
-    <van-cell title="手机号" value="{{userInfo.phone}}" link-type="navigateTo" url="/pages/update-phone/update-phone" />
-  </van-cell-group>
+<!-- 顶部用户信息卡片 -->
+<view class="user-card" style="background: linear-gradient(135deg, {{isLogin ? '#6B8DD6' : '#9E9E9E'}}, #8E37D7);">
+  <image wx:if="{{isLogin}}" src="{{userInfo.avatarUrl}}" class="avatar" mode="aspectFill" />
+  <text class="username">{{isLogin ? userInfo.nickName : '未登录用户'}}</text>
+  <view class="badge">{{isLogin ? 'VIP3' : '点击登录'}}</view>
+</view>
 
-  <!-- 操作按钮组 -->
-  <view class="btn-group">
-    <van-button wx:if="{{!isLogin}}" type="primary" block bindtap="handleWechatLogin">
-      微信一键登录
-    </van-button>
-    <van-button wx:else type="info" block bindtap="handleLogout">
-      退出登录
-    </van-button>
-    <van-button plain hairline block url="/pages/reset-password/reset-password">
-      修改密码
-    </van-button>
+<!-- 数据面板 -->
+<view class="stats-panel">
+  <view class="stat-item">
+    <text class="value">12</text>
+    <text class="label">充电次数</text>
+  </view>
+  <view class="stat-item">
+    <text class="value">86kWh</text>
+    <text class="label">累计电量</text>
+  </view>
+  <view class="stat-item">
+    <text class="value">¥258</text>
+    <text class="label">累计消费</text>
+  </view>
+</view>
+
+<!-- 功能网格 -->
+<view class="grid-container">
+  <view class="menu-item" hover-class="menu-hover">
+    <image src="/images/ebike.png" class="icon" />
+    <text>车辆信息</text>
+  </view>
+  <view class="menu-item" hover-class="menu-hover">
+    <image src="/images/user.png" class="icon" />
+    <text>管理员入口</text>
   </view>
 </view>

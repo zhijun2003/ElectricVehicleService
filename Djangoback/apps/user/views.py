@@ -3,11 +3,9 @@ import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
-@csrf_exempt
 def user_register(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -20,7 +18,6 @@ def user_register(request):
         return JsonResponse({'status': 'success', 'message': 'User registered successfully'})
 
 
-@csrf_exempt
 def user_login(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -41,13 +38,10 @@ def user_login(request):
         return JsonResponse({'status': 'error', 'message': '账号或密码错误'})
 
 
-@csrf_exempt
 def user_logout(request):
     logout(request)
     return JsonResponse({'status': 'success', 'message': 'User logged out successfully'})
 
-
-@csrf_exempt
 def update_user_info(request):
     if request.method == 'PUT':
         data = json.loads(request.body)
@@ -59,7 +53,6 @@ def update_user_info(request):
         return JsonResponse({'status': 'success', 'message': 'User info updated successfully'})
 
 
-@csrf_exempt
 def reset_password(request):
     if request.method == 'POST':
         data = json.loads(request.body)

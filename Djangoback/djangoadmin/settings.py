@@ -24,11 +24,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
 
-    # 本地应用（按功能顺序）
-    'apps.user',
+    # 本地应用
     'apps.charging',
     'apps.repair',
     'apps.statistics',
+    'apps.user',
 ]
 
 # 中间件配置
@@ -66,18 +66,19 @@ TEMPLATES = [
 # 数据库配置
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        # 生产环境建议使用MySQL/PostgreSQL：
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'ev_charging',
-        # 'USER': 'ev_user',
-        # 'PASSWORD': 'ev_password',
-        # 'HOST': 'localhost',
-        # 'PORT': '3306',
-        # 'OPTIONS': {'charset': 'utf8mb4'},
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ev_charging',
+        'USER': 'ev_user',
+        'PASSWORD': 'ev_password',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'ssl': {'ca': '/path/to/server-ca.pem'}  # 如果使用云数据库
+        }
     }
 }
+
 
 # 用户认证配置
 AUTH_USER_MODEL = 'user.CustomUser'
@@ -105,7 +106,6 @@ SIMPLE_JWT = {
 # 跨域配置
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://your-weixin-domain.com",
 ]
 
 # 静态文件配置

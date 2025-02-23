@@ -1,43 +1,42 @@
 <!-- pages/index/index.wxml -->
 <view class="container">
   <!-- 充电状态提示 -->
-  <view class="status-card" wx:if="{{userStatus.charging}}">
-    <image class="status-icon" src="/images/charging.png"/>
+  <view class="status-card" wx:if="{{userStatus.charging && userStatus.charging.station && userStatus.charging.remain}}" style="background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(246,248,251,0.9)); backdrop-filter: blur(20rpx)">
+    <image class="status-icon" src="{{'/images/charging.png'}}" mode="aspectFit" style="width: 40rpx; height: 40rpx" binderror="onImageError" data-type="status" />
     <text class="status-text">
-      正在充电：{{userStatus.charging.station}} 
+      正在充电：{{userStatus.charging.station}}
       剩余{{userStatus.charging.remain}}%
     </text>
+    <view class="progress-bar">
+      <view class="progress-inner" style="width: {{userStatus.charging.remain}}%"></view>
+    </view>
   </view>
 
   <!-- 功能导航网格 -->
   <view class="grid-container">
-    <block wx:for="{{menuItems}}" wx:key="index">
-      <view 
-        class="menu-item" 
-        style="background: {{item.color}}"
-        bindtap="navigateTo" 
-        data-url="{{item.url}}"
-        hover-class="menu-item-hover"
-      >
-        <image class="menu-icon" src="/images/{{item.icon}}.png"/>
+    <block wx:for="{{menuItems}}" wx:key="id">
+      <view class="menu-item" style="background: {{item.color || defaultColor}}; width: auto; height: 300rpx; display: flex; box-sizing: border-box; left: 0rpx; top: 0rpx" bindtap="navigateTo" data-url="{{item.url}}" hover-class="menu-item-hover">
+        <view class="icon-wrapper">
+          <image class="menu-icon" src="{{ '/images/' + item.icon + '.png'}}" mode="aspectFit" style="width: 75%; height: 75%" lazy-load binderror="onImageError" data-type="menu" />
+        </view>
         <text class="menu-title">{{item.title}}</text>
-        <view class="menu-badge" wx:if="{{item.icon === 'clock' && recordsCount > 0}}">
-          {{recordsCount}}
+        <view class="menu-badge" wx:if="{{item.icon === 'clock' && Number(recordsCount) > 0}}">
+          {{Math.min(Number(recordsCount), 99)}}
         </view>
       </view>
     </block>
   </view>
 
   <!-- 实时数据看板 -->
-  <view class="stats-panel">
+  <view class="stats-panel animate__animated" animation="fadeInUp" style="width: auto; display: flex; box-sizing: border-box; left: 1rpx; top: 2rpx; position: relative">
     <view class="stats-item">
-      <image class="stats-icon" src="/images/station.png"/>
-      <text class="stats-value">{{stats.availableStations}}</text>
+      <image class="stats-icon" src="/images/station.png" mode="aspectFit" style="width: 48rpx; height: 48rpx" />
+      <text class="stats-value" data-unit="个">{{stats.availableStations || 0}}</text>
       <text class="stats-label">可用桩位</text>
     </view>
     <view class="stats-item">
-      <image class="stats-icon" src="/images/time.png"/>
-      <text class="stats-value">{{stats.avgWaitTime}}min</text>
+      
+      <text class="stats-value" data-unit="分钟">{{stats.avgWaitTime || 0}}</text>
       <text class="stats-label">平均等待</text>
     </view>
   </view>

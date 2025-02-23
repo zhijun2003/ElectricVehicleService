@@ -1,1 +1,96 @@
 /* pages/user/user.wxss */
+/* 用户卡片 */
+.user-card {
+  height: 320rpx;
+  border-radius: 32rpx;
+  margin: 32rpx;
+  padding: 48rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 16rpx 40rpx rgba(101,132,255,0.2);
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(255,255,255,0.3);
+  margin-bottom: 24rpx;
+}
+
+.username {
+  color: #fff;
+  font-size: 36rpx;
+  font-weight: 500;
+  text-shadow: 0 4rpx 8rpx rgba(0,0,0,0.2);
+}
+
+/* 数据面板 */
+.stats-panel {
+  display: flex;
+  justify-content: space-around;
+  background: #fff;
+  border-radius: 24rpx;
+  margin: 32rpx;
+  padding: 40rpx 0;
+  box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.05);
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.value {
+  display: block;
+  font-size: 44rpx;
+  color: #2c3e50;
+  font-family: 'DIN Alternate';
+}
+
+.label {
+  display: block;
+  font-size: 28rpx;
+  color: #7f8c8d;
+  margin-top: 8rpx;
+}
+
+/* 功能网格 */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24rpx;
+  padding: 0 32rpx;
+}
+
+.menu-item {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  position: relative;
+  box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.05);
+}
+
+.menu-hover {
+  transform: translateY(-4rpx);
+  box-shadow: 0 12rpx 32rpx rgba(0,0,0,0.1);
+}
+
+.icon {
+  width: 64rpx;
+  height: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.badge {
+  position: absolute;
+  right: 16rpx;
+  top: 16rpx;
+  background: #FF6B6B;
+  color: #fff;
+  font-size: 24rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 32rpx;
+}

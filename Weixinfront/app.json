@@ -1,10 +1,9 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs",
     "pages/map/map",
     "pages/charging_records/charging_records",
-    "pages/repair_record_detail/repair_record_detail",
+    "pages/repair/repair",
     "pages/user/user",
     "pages/admin/admin"
   ],
