@@ -28,7 +28,7 @@
   </view>
 
   <!-- 实时数据看板 -->
-  <view class="stats-panel animate__animated" animation="fadeInUp" style="width: auto; display: flex; box-sizing: border-box; left: 1rpx; top: 2rpx; position: relative">
+  <view class="stats-panel animate__animated" animation="fadeInUp" style="width: 650rpx; display: flex; box-sizing: border-box; left: 2rpx; top: 2rpx; position: relative; height: 150rpx">
     <view class="stats-item">
       <image class="stats-icon" src="/images/station.png" mode="aspectFit" style="width: 48rpx; height: 48rpx" />
       <text class="stats-value" data-unit="个">{{stats.availableStations || 0}}</text>

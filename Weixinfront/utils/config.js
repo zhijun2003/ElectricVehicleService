@@ -1,6 +1,8 @@
 // Weixinfront/utils/config.js
 export const API_CONFIG = {
-  baseURL: 'http://localhost:8000',
+  baseURL: process.env.NODE_ENV === 'development'
+    ? 'http://localhost:8000'
+    : 'https://api.yourdomain.com',
   endpoints: {
     STATIONS: '/api/charging/stations',
     RECORDS: '/api/charging/records',

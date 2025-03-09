@@ -8,12 +8,14 @@
   <!-- 筛选栏 -->
   <view class="filter-bar">
     <van-search
-      placeholder="搜索申报记录"
-      value="{{searchKey}}"
-      bind:search="onSearch"
-      bind:clear="onClear"
-    />
-    <van-dropdown-menu active-color="#6B8DD6">
+    placeholder="搜索申报记录"
+    shape="round"
+    background="#f5f6fa"
+    value="{{searchKey}}"
+    bind:search="onSearch"
+    bind:clear="onClear"
+  />
+    <van-dropdown-menu active-color="#6B8DD6" z-index="100">
       <van-dropdown-item
         title="状态筛选"
         options="{{ statusOptions }}"
@@ -22,6 +24,15 @@
       />
     </van-dropdown-menu>
   </view>
+
+  <!-- 增加空状态提示 -->
+<block wx:if="{{list.length === 0}}">
+  <van-empty
+    image="search"
+    description="暂无相关记录"
+    wx:if="{{!loading}}"
+  />
+</block>
 
   <!-- 申报记录列表 -->
   <scroll-view

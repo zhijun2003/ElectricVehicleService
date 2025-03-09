@@ -123,3 +123,26 @@ Page({
   // 时间格式化
   formatTime
 })
+
+// 增加防抖处理
+let searchTimer = null
+
+onSearch(e) {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    this.setData({
+      searchKey: e.detail,
+      list: [],
+      page: 1,
+      hasMore: true
+    }, () => this.loadRecords(true))
+  }, 500)
+}
+
+// 滚动加载优化
+loadMore() {
+  if (!this.data.hasMore || this.data.loading) return
+  this.setData({
+    page: this.data.page + 1
+  }, () => this.loadRecords())
+}

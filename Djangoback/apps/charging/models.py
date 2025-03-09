@@ -44,11 +44,10 @@ class ChargingStation(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='更新时间')
 
     class Meta:
-        verbose_name = '充电桩'
-        verbose_name_plural = '充电桩'
         indexes = [
             models.Index(fields=['gps_lat', 'gps_lng']),
-            models.Index(fields=['status'])
+            models.Index(fields=['status']),
+            models.Index(fields=['reservation_expiry'])
         ]
 
     def __str__(self):

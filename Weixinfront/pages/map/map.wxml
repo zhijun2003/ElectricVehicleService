@@ -1,9 +1,26 @@
-<!-- map.wxml -->
 <view class="container">
-  <map id="stationMap" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" show-location bindmarkertap="navigateToStation" style="width: 100%; height: 80vh;">
+  <map
+    id="stationMap"
+    longitude="{{longitude}}"
+    latitude="{{latitude}}"
+    scale="{{scale}}"
+    markers="{{markers}}"
+    bindmarkertap="handleMarkerTap"
+    show-location
+    style="width: 100%; height: 70vh;">
   </map>
 
-  <button type="primary" bindtap="loadChargingStations" class="refresh-btn">
-    刷新充电桩列表
-  </button>
+  <!-- 充电桩详情卡片 -->
+  <view class="station-card" wx:if="{{showDetail}}">
+    <view class="card-header">
+      <text class="station-name">{{selectedStation.callout.content}}</text>
+      <van-icon name="close" bindtap="closeDetail" />
+    </view>
+    <button
+      type="primary"
+      bindtap="navigateToStation"
+      class="navigation-btn">
+      开始导航
+    </button>
+  </view>
 </view>
